@@ -229,15 +229,14 @@ class ResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
 
-        if self.return_features:
-            return x
-
 
         # 如果是特征提取任务，输出形状为 [batch_size, C, H, W]
         # 如果是分类任务，输出形状为 [batch_size, num_classes]
         # 平均池化和全连接层
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
+        if self.return_features:
+            return x
 
         x = self.fc(x)
 
@@ -262,6 +261,6 @@ def resnet50(num_classes=1000, **kwargs):
 # use case
 if __name__ == '__main__':
     model = resnet18(num_classes=10, return_features=True)
-    x = torch.randn(4, 3, 224, 224)
+    x = torch.randn(4, 3, 64, 64)
     print(model(x).shape)  # torch.Size([1, 512, 7, 7])
 
